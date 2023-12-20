@@ -17,7 +17,7 @@ namespace TopScript
         public Lexer(string source)
         {
             _Source = source ?? throw new ArgumentNullException(nameof(source));
-            _Tokens = new List<Token>();    
+            _Tokens = new List<Token>();
 
             _Position = -2;
 
@@ -29,7 +29,7 @@ namespace TopScript
 
         public void ConsumeWhiteSpace()
         {
-            while(_CurrentChar != '\0' && char.IsWhiteSpace(_CurrentChar))
+            while (_CurrentChar != '\0' && char.IsWhiteSpace(_CurrentChar))
             {
                 Next();
             }
@@ -41,7 +41,7 @@ namespace TopScript
 
             if (_Position <= (_Source.Length - 2))
             {
-                _NextChar = _Source[_Position+1];
+                _NextChar = _Source[_Position + 1];
             }
             else
             {
@@ -62,17 +62,17 @@ namespace TopScript
                 //_Tokens.Add(token);
                 return token;
             }
-            else if(char.IsLetter( currentChar)) //possible start of a reserved keyWord - var
+            else if (char.IsLetter(currentChar)) //possible start of a reserved keyWord - var
             {
                 var sb = new StringBuilder();
                 var buffer = string.Empty;
-                while(_CurrentChar != '\0' && char.IsLetter(_CurrentChar))
+                while (_CurrentChar != '\0' && char.IsLetter(_CurrentChar))
                 {
                     sb.Append(_CurrentChar);
                     Next();
                 }
                 buffer = sb.ToString();
-                if(IsReservedKeyword(buffer, out var kind))
+                if (IsReservedKeyword(buffer, out var kind))
                 {
                     //this is almost probably var keyword...
                     //return MakeReservedKeyword();
@@ -81,12 +81,53 @@ namespace TopScript
 
                 //probably an identifier
                 return new Token(TokenKind.Identifier, buffer);
-                
+
             }
-            else if(currentChar == '=')
+            else if (currentChar == '=')
             {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '=')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.Equality, sb.ToString());
+                }
                 return new Token(TokenKind.Assign, charString);
+            }else if(currentChar == '<')
+            {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '=')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.LessThanOrEquals, sb.ToString());
+                }
+                return new Token(TokenKind.LessThan, charString);
+            }else if(currentChar == '>')
+            {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '=')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.GreaterThanOrEquals, sb.ToString());
+                }
+                return new Token(TokenKind.GreaterThan, charString);
             }
+            else if(currentChar == '&')
+            {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '&')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.And, sb.ToString());
+                }
+
+                return new Token(TokenKind.Ampersand, charString);
+
+            }
+
             else if (currentChar == '\"')
             {
                 return MakeStringLiteral();
@@ -94,16 +135,20 @@ namespace TopScript
             else if (char.IsDigit(currentChar))
             {
                 return MakeNumericLiteral();
-            }else if(currentChar == '+')
+            }
+            else if (currentChar == '+')
             {
                 return new Token(TokenKind.Plus, charString);
-            }else if(currentChar == '-')
+            }
+            else if (currentChar == '-')
             {
                 return new Token(TokenKind.Minus, charString);
-            }else if(currentChar == '*')
+            }
+            else if (currentChar == '*')
             {
-                return new Token(TokenKind.Multiply, charString);   
-            }else if(currentChar == '/')
+                return new Token(TokenKind.Multiply, charString);
+            }
+            else if (currentChar == '/')
             {
                 return new Token(TokenKind.Divide, charString);
             }
@@ -138,14 +183,38 @@ namespace TopScript
             else if (currentChar == ']')
             {
                 return new Token(TokenKind.CloseSquareBracket, charString);
-            }else if(currentChar == '!')
+            }
+            else if (currentChar == '!')
             {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '=')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.NotEqual, sb.ToString());
+                }
                 return new Token(TokenKind.Not, charString);
             }
             else if (currentChar == '|')
             {
+                var sb = new StringBuilder();
+                sb.Append(currentChar);
+                if (_NextChar == '|')
+                {
+                    sb.Append(_NextChar);
+                    return new Token(TokenKind.Or, sb.ToString());
+                }
                 return new Token(TokenKind.Pipe, charString);
             }
+            else if (currentChar == '%')
+            {
+                return new Token(TokenKind.Modulo, charString);
+            }
+            else if (currentChar == '.')
+            {
+                return new Token(TokenKind.Dot, charString);
+            }
+
 
 
 
@@ -154,9 +223,9 @@ namespace TopScript
         }
         private bool IsReservedKeyword(string keyword, out TokenKind kind)
         {
-            
+
             //var kind = TokenKind.EOFToken;
-            switch(keyword.ToLowerInvariant())
+            switch (keyword.ToLowerInvariant())
             {
                 case "var":
                     kind = TokenKind.Var;
@@ -166,25 +235,39 @@ namespace TopScript
                     kind = TokenKind.For;
                     break;
                 case "while":
-                    kind =  TokenKind.While;
+                    kind = TokenKind.While;
                     break;
 
                 case "true":
+                    kind = TokenKind.True;
+                    break;
                 case "false":
-                    kind = TokenKind.BooleanLiteral;
+                    kind = TokenKind.False;
+                    break;
+                case "null":
+                    kind = TokenKind.Null;
                     break;
 
                 case "function":
                     kind = TokenKind.Function;
                     break;
-               
+                case "if":
+                    kind = TokenKind.If;
+                    break;
+                case "else":
+                    kind = TokenKind.Else;
+                    break;
+                case "in":
+                    kind = TokenKind.In;
+                    break;
+
                 default:
                     kind = TokenKind.EOFToken;
                     break;
-                
+
             }
 
-            if(kind != TokenKind.EOFToken)
+            if (kind != TokenKind.EOFToken)
             {
                 return true;
             }
@@ -232,12 +315,12 @@ namespace TopScript
         {
             Next();
             var currentPos = _Position;
-            while(_CurrentChar != '\0' && _CurrentChar != '\"')
+            while (_CurrentChar != '\0' && _CurrentChar != '\"')
             {
                 Next();
             }
 
-            var literal = _Source.Substring(currentPos, _Position - currentPos );
+            var literal = _Source.Substring(currentPos, _Position - currentPos);
 
             return new Token(TokenKind.StringLiteral, literal);
         }

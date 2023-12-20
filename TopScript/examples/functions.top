@@ -1,0 +1,7 @@
+﻿fn say_hello(name) {
+    println("Hello, " + name)
+}
+
+println(say_hello)
+
+say_hello("Ryan")

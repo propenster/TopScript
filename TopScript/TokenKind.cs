@@ -37,7 +37,6 @@ namespace TopScript
         EOFToken,
         While,
         For,
-        BooleanLiteral,
         Function,
 
 
@@ -49,5 +48,23 @@ namespace TopScript
         Multiply,
         Not,
         Pipe,
+        If,
+        Else,
+        In,
+        True,
+        False,
+        Null,
+        Modulo,
+        Equality,
+        LessThan,
+        GreaterThan,
+        LessThanOrEquals,
+        GreaterThanOrEquals,
+        And,
+        Or,
+        Ampersand,
+        NotEqual,
+        Dot,
+        Pow,
     }
 }

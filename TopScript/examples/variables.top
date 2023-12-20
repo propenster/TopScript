@@ -1,0 +1,4 @@
+﻿var age = 28
+var name = "Faith"
+
+var amount = 2_000_000
