@@ -19,6 +19,7 @@ namespace TopScript
         LeftCurlyBrace,
         RightCurlyBrace,
         Comma,
+        Colon,
         SemiColon,
         OpenSquareBracket,
         CloseSquareBracket,
@@ -66,5 +67,7 @@ namespace TopScript
         NotEqual,
         Dot,
         Pow,
+        EndLine,
+        Struct,
     }
 }

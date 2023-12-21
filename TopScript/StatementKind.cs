@@ -12,6 +12,7 @@ namespace TopScript
         Function,
         For,
         While,
-
+        Expression,
+        Struct,
     }
 }

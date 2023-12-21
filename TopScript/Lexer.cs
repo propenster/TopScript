@@ -56,31 +56,48 @@ namespace TopScript
             ConsumeWhiteSpace();
             var currentChar = _CurrentChar;
             var charString = currentChar.ToString();
+
+            if (currentChar == ';')
+            {
+                return new Token(TokenKind.EndLine, charString);
+            }
+
             if (currentChar == '\0')
             {
                 token = new Token(TokenKind.EOFToken, charString);
                 //_Tokens.Add(token);
                 return token;
             }
+            else if (currentChar == '(')
+            {
+                return new Token(TokenKind.LeftParen, charString);
+            }
+            else if (currentChar == ')')
+            {
+                return new Token(TokenKind.RightParen, charString);
+            }
             else if (char.IsLetter(currentChar)) //possible start of a reserved keyWord - var
             {
-                var sb = new StringBuilder();
-                var buffer = string.Empty;
-                while (_CurrentChar != '\0' && char.IsLetter(_CurrentChar))
-                {
-                    sb.Append(_CurrentChar);
-                    Next();
-                }
-                buffer = sb.ToString();
-                if (IsReservedKeyword(buffer, out var kind))
+                //var sb = new StringBuilder();
+                //var buffer = string.Empty;
+                //while (_CurrentChar != '\0' && char.IsLetter(_CurrentChar))
+                //{
+                //    sb.Append(_CurrentChar);
+                //    Next();
+                //}
+                //buffer = sb.ToString();
+
+                var prevToken = MakeIdentifierLiteral();
+
+                if (IsReservedKeyword(prevToken?.literal?.ToString() ?? string.Empty, out var kind))
                 {
                     //this is almost probably var keyword...
                     //return MakeReservedKeyword();
-                    return new Token(kind, buffer);
+                    return new Token(kind, prevToken?.literal?.ToString() ?? string.Empty);
                 }
 
                 //probably an identifier
-                return new Token(TokenKind.Identifier, buffer);
+                return new Token(TokenKind.Identifier, prevToken?.literal?.ToString() ?? string.Empty);
 
             }
             else if (currentChar == '=')
@@ -154,8 +171,9 @@ namespace TopScript
             }
             else if (currentChar == ':')
             {
-                return new Token(TokenKind.SemiColon, charString);
+                return new Token(TokenKind.Colon, charString);
             }
+            
             else if (currentChar == ',')
             {
                 return new Token(TokenKind.Comma, charString);
@@ -168,14 +186,7 @@ namespace TopScript
             {
                 return new Token(TokenKind.RightCurlyBrace, charString);
             }
-            else if (currentChar == '(')
-            {
-                return new Token(TokenKind.LeftParen, charString);
-            }
-            else if (currentChar == ')')
-            {
-                return new Token(TokenKind.RightParen, charString);
-            }
+            
             else if (currentChar == '[')
             {
                 return new Token(TokenKind.OpenSquareBracket, charString);
@@ -323,6 +334,19 @@ namespace TopScript
             var literal = _Source.Substring(currentPos, _Position - currentPos);
 
             return new Token(TokenKind.StringLiteral, literal);
+        }
+        private Token MakeIdentifierLiteral()
+        {
+            var currentPos = _Position;
+            //Next();
+            while (_CurrentChar != '\0' && _CurrentChar != ';' && char.IsLetter(_NextChar))
+            {
+                Next();
+            }
+
+            var literal = _Source.Substring(currentPos, _Position - currentPos+1);
+
+            return new Token(TokenKind.Identifier, literal);
         }
     }
 }

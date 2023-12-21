@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TopScript
 {
@@ -29,6 +30,11 @@ namespace TopScript
             Literal = literal ?? string.Empty;
         }
         public string Literal { get; }
+        public override string ToString()
+        {
+            return string.Format("String({0})", Literal);
+        }
+
     }
     public class NullExpression : StatementExpression
     {
@@ -47,6 +53,13 @@ namespace TopScript
 
         public Token Token { get; }
         public StatementExpression Expression { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Token: {0}, Expression: {1} }}", Token, Expression);
+        }
+
+
     }
     public class ListExpression : StatementExpression
     {
@@ -56,6 +69,10 @@ namespace TopScript
         }
 
         public List<StatementExpression> Items { get; }
+        public override string ToString()
+        {
+            return string.Format("[ Items: {0} ]", string.Join(", ", Items));
+        }
     }
     public class ListIndexExpression : StatementExpression
     {
@@ -67,6 +84,11 @@ namespace TopScript
 
         public StatementExpression Expression { get; }
         public StatementExpression? Index { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Expression: {0}, Index: [{1}] }}", Expression, Index);
+        }
     }
     public class StructExpression : StatementExpression
     {
@@ -78,6 +100,11 @@ namespace TopScript
 
         public StatementExpression Expression { get; }
         public Dictionary<string, StatementExpression> Fields { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Expression: {0}, Fields: [{1}] }}", Expression, Fields);
+        }
     }
 
     public class CallExpression : StatementExpression
@@ -87,9 +114,13 @@ namespace TopScript
             Expression = expression;
             Args = args;
         }
-
         public StatementExpression Expression { get; }
         public List<StatementExpression> Args { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Expression: {0}, Args: [{1}] }}", Expression, string.Join(", ", Args));
+        }
     }
     public class InfixExpression : StatementExpression
     {
@@ -103,6 +134,11 @@ namespace TopScript
         public StatementExpression Left { get; }
         public Op Operand { get; }
         public StatementExpression Right { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Left: {0}, Op: {1}, Right: {2} }}", Left, Operand, Right);
+        }
     }
     public class AssignmentExpression : StatementExpression
     {
@@ -114,6 +150,11 @@ namespace TopScript
 
         public StatementExpression Left { get; }
         public StatementExpression Right { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Left: {0}, Right: {1} }}", Left, Right);
+        }
     }
 
     public class GetExpression : StatementExpression
@@ -126,6 +167,11 @@ namespace TopScript
 
         public StatementExpression Expression { get; }
         public string Field { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Expression: {0}, Field: {1} }}", Expression, Field);
+        }
     }
     public class BooleanExpression : StatementExpression
     {
@@ -134,6 +180,11 @@ namespace TopScript
             Boolean = boolean;
         }
         public bool Boolean { get; }
+
+        public override string ToString()
+        {
+            return string.Format("Bool({0})", Boolean);
+        }
     }
     public class IdentifierExpression : StatementExpression
     {
@@ -142,6 +193,10 @@ namespace TopScript
             Identifier = identifier;
         }
         public string Identifier { get; }
+        public override string ToString()
+        {
+            return string.Format("Identifier({0})", Identifier);
+        }
     }
 
     public class BinaryExpression : StatementExpression
@@ -172,6 +227,10 @@ namespace TopScript
 
         public List<Parameter> Parameters { get; }
         public List<Statement> Body { get; }
+        public override string ToString()
+        {
+            return string.Format("{{ Parameters: [{0}], Body: [{1}] }}", string.Join(", ", Parameters), string.Join(", ", Body));
+        }
     }
     public enum BinaryOperand
     {
@@ -195,11 +254,20 @@ namespace TopScript
         string Name { get; }
         StatementExpression Expression { get; }
     }
+    public interface IExpressionStatement : IStatement
+    {
+        StatementExpression Expression { get; }
+    }
     public interface IFunctionDeclarationStatement : IStatement
     {
         string Name { get; }
         List<Parameter> Parameters { get; }
         List<Statement> Body { get; }
+    }
+    public interface IStructDeclarationStatement : IStatement
+    {
+        string Name { get; }
+        List<Parameter> Fields { get; }
     }
     public class VarStatement : Statement, IVarStatement
     {
@@ -218,6 +286,36 @@ namespace TopScript
             return string.Format("Var {{ name: {0}, expression: {1} }}", Name, Expression.ToString());
         }
     }
+    public class ExpressionStatement : Statement, IExpressionStatement
+    {
+        public StatementKind Kind => StatementKind.Expression;
+        public ExpressionStatement(StatementExpression expression)
+        {
+            Expression = expression;
+        }
+
+        public StatementExpression Expression { get; }
+
+        public override string ToString()
+        {
+            return string.Format("Expression {{ Expression: {0} }}", Expression);
+        }
+    }
+    public class ReturnStatement : Statement, IExpressionStatement
+    {
+        public StatementKind Kind => StatementKind.Expression;
+        public ReturnStatement(StatementExpression expression)
+        {
+            Expression = expression;
+        }
+
+        public StatementExpression Expression { get; }
+
+        public override string ToString()
+        {
+            return string.Format("Expression {{ Expression: {0} }}", Expression);
+        }
+    }
     public class FunctionDeclarationStatement : Statement, IFunctionDeclarationStatement
     {
         public StatementKind Kind => StatementKind.Function;
@@ -234,6 +332,28 @@ namespace TopScript
         public List<Parameter> Parameters { get; }
 
         public List<Statement> Body { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Name: {0}, Parameters: [{1}], Body: [{2}] }}", Name, string.Join(", ", Parameters), string.Join(", ", Body));
+        }
+    }
+    public class StructDeclarationStatement : Statement, IStructDeclarationStatement
+    {
+        public StatementKind Kind => StatementKind.Struct;
+
+        public StructDeclarationStatement(string name, List<Parameter> fields)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Fields = fields;
+        }
+
+        public string Name { get; }
+        public List<Parameter> Fields { get; }
+        public override string ToString()
+        {
+            return string.Format("{{ Name: {0}, Fields: [{1}]}}", Name, string.Join(", ", Fields));
+        }
     }
     public interface IIfStatement
     {
@@ -250,10 +370,13 @@ namespace TopScript
             Otherwise = otherwise;
         }
         public StatementExpression Condition { get; }
-
         public List<Statement> Then { get; }
-
         public List<Statement> Otherwise { get; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Condition: {0}, Parameters: [{1}], Body: [{2}] }}", Condition, string.Join(", ", Then), string.Join(", ", Otherwise));
+        }
     }
     public abstract class Statement
     {

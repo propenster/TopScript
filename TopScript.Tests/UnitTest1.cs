@@ -11,8 +11,8 @@ namespace TopScript.Tests
             var lexer = new Lexer(source);
             Assert.Equal(new Token(TokenKind.Var, "var"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.Function, "function"), lexer.Lex());
-            Assert.Equal(new Token(TokenKind.BooleanLiteral, "true"), lexer.Lex());
-            Assert.Equal(new Token(TokenKind.BooleanLiteral, "false"), lexer.Lex());
+            Assert.Equal(new Token(TokenKind.True, "true"), lexer.Lex());
+            Assert.Equal(new Token(TokenKind.False, "false"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.While, "while"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.For, "for"), lexer.Lex());
         }
@@ -67,7 +67,7 @@ namespace TopScript.Tests
             Assert.Equal(new Token(TokenKind.CloseSquareBracket, "]"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.Comma, ","), lexer.Lex());
             
-            Assert.Equal(new Token(TokenKind.SemiColon, ":"), lexer.Lex());
+            Assert.Equal(new Token(TokenKind.Colon, ":"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.Plus, "+"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.Multiply, "*"), lexer.Lex());
             Assert.Equal(new Token(TokenKind.Minus, "-"), lexer.Lex());

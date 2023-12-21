@@ -7,7 +7,7 @@ internal class Program
         Console.WriteLine("TopScript interpreted programming language");
         Console.WriteLine();
         Console.WriteLine();
-        var source = File.ReadAllText("test1.top");
+        var source = File.ReadAllText("examples/functions.top");
         var lexer = new Lexer(source);
 
         //while (true)
@@ -17,7 +17,7 @@ internal class Program
         //    if (token.kind == TokenKind.EOFToken) break;
 
         //}
-
+        var c = char.IsLetter('(');
         var parser = new Parser(lexer);
         var program = parser.Parse();
 

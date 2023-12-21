@@ -33,28 +33,54 @@ namespace TopScript
         {
             //Next();
             Statement statement = default;
-            if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind == TokenKind.Var)
+            if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && _CurrentToken.kind == TokenKind.Var)
             {
                 //parse out a var statement
                 statement = ParseVarDeclaration();
-                //statement = ParseVar();
             }
-            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind == TokenKind.For)
+            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && _CurrentToken.kind == TokenKind.For)
             {
                 statement = ParseFor();
             }
-            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind == TokenKind.If)
+            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && _CurrentToken.kind == TokenKind.If)
             {
                 statement = ParseIf();
             }
-            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind == TokenKind.Function)
+            else if (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && _CurrentToken.kind == TokenKind.Function)
             {
                 statement = ParseFunction(true);
             }
-
+            else if(_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && _CurrentToken.kind == TokenKind.Struct)
+            {
+                statement = ParseStruct();
+            }
+            
 
             return statement;
         }
+
+        private Statement ParseStruct()
+        {
+            ExpectTokenAndRead(TokenKind.Struct);
+            var name = ExpectIdentifierAndRead()?.literal;
+            //Next();
+            ExpectTokenAndRead(TokenKind.LeftCurlyBrace);
+            //now gather the params
+            var fields = new List<Parameter>();
+            while (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.RightCurlyBrace)
+            {
+                if (_CurrentToken.kind == TokenKind.Comma) ExpectTokenAndRead(TokenKind.Comma);
+                var field = ExpectIdentifierAndRead()?.literal.ToString() ?? string.Empty;
+                fields.Add(new Parameter(field));
+            }
+
+            ExpectTokenAndRead(TokenKind.RightCurlyBrace);
+
+            //var body = ParseBlock();
+
+            return new StructDeclarationStatement(name?.ToString() ?? string.Empty, fields);
+        }
+
         public AstProgram Parse()
         {
             var program = new AstProgram();
@@ -70,6 +96,15 @@ namespace TopScript
                 if (stmt is null) break;
                 statements.Add(stmt);
 
+                //if ( _CurrentToken.kind == TokenKind.EOFToken)
+                //{
+                //    Next(); // Move to the next token
+                //}
+                //else
+                //{
+                //    throw new UnexpectedTokenException($"Expected line break after statement, found {_CurrentToken.kind}");
+                //}
+
             }
             program.Statements = statements;
 
@@ -82,6 +117,7 @@ namespace TopScript
             var result = ExpectTokenAndThrows(token);
 
             Next();
+            var t = _CurrentToken;
 
             return result;
         }
@@ -100,6 +136,7 @@ namespace TopScript
         {
             ExpectTokenAndRead(TokenKind.Function);
             var name = hasIdentifier ? ExpectIdentifierAndRead()?.literal : "<Closure>";
+            //Next();
             ExpectTokenAndRead(TokenKind.LeftParen);
             //now gather the params
             var parameters = new List<Parameter>();
@@ -123,7 +160,7 @@ namespace TopScript
             var condition = ParseExpression2(Precedence.Statement);
             var then = ParseBlock();
             var otherwise = new List<Statement>();
-            if(_CurrentToken.kind == TokenKind.Else)
+            if (_CurrentToken.kind == TokenKind.Else)
             {
                 ExpectTokenAndRead(TokenKind.Else);
                 otherwise = ParseBlock();
@@ -193,9 +230,9 @@ namespace TopScript
         private Statement ParseVarDeclaration()
         {
             ExpectTokenAndRead(TokenKind.Var);
-            var name = ExpectIdentifierAndRead().ToString();
+            var name = ExpectIdentifierAndRead().literal.ToString();
             StatementExpression initial = default;
-            if(_CurrentToken.kind== TokenKind.Assign)
+            if (_CurrentToken.kind == TokenKind.Assign)
             {
                 ExpectTokenAndRead(TokenKind.Assign);
                 initial = ParseExpression2(Precedence.Lowest);
@@ -213,8 +250,9 @@ namespace TopScript
             switch (_CurrentToken.kind)
             {
                 case TokenKind.StringLiteral:
+                    var literal = _CurrentToken?.literal?.ToString();
                     ExpectTokenAndRead(TokenKind.StringLiteral);
-                    left = new StringExpression(_CurrentToken.literal.ToString());
+                    left = new StringExpression(literal);
                     break;
 
                 case TokenKind.Null:
@@ -277,15 +315,21 @@ namespace TopScript
                     throw new UnexpectedTokenException(_CurrentToken.literal.ToString());
 
             }
-            while (_CurrentToken.kind != TokenKind.EOFToken && (int)precedence < (int)ConvertTokenKindToPrecedence(_CurrentToken.kind))
+
+            while (_CurrentToken.kind != TokenKind.EOFToken && _CurrentToken.kind != TokenKind.EndLine && (int)precedence < (int)ConvertTokenKindToPrecedence(_CurrentToken.kind))
             {
                 StatementExpression expP = ParsePostfixExpression(left);
                 StatementExpression expIn = ParseInfixExpression(left);
 
-                if (expP != null) { left = expP; }
+                if (expP != null)
+                {
+                    left = expP;
+                    //continue;
+                }
                 else if (expIn != null)
                 {
                     left = expIn;
+                    //continue;
                 }
                 else
                 {
@@ -293,6 +337,8 @@ namespace TopScript
                 }
 
             }
+
+
 
 
             return left;
@@ -323,9 +369,9 @@ namespace TopScript
                     {
                         var fieldKey = ExpectIdentifierAndRead().ToString();
                         StatementExpression value = default;
-                        if (_CurrentToken.kind == TokenKind.SemiColon)
+                        if (_CurrentToken.kind == TokenKind.Colon)
                         {
-                            ExpectTokenAndRead(TokenKind.SemiColon);
+                            ExpectTokenAndRead(TokenKind.Colon);
                             value = ParseExpression2(Precedence.Lowest);
                         }
                         else
