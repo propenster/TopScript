@@ -10,11 +10,12 @@
 - Runtime from scratch
 
 ## References 
-- [WikipediaParsing](https://en.wikipedia.org/wiki/Parsing)
+- [Wikipedia Parsing](https://en.wikipedia.org/wiki/Parsing)
 - [Writing an interpreter in Go by Thorsten Ball](https://interpreterbook.com/)
 - [Inspired by Lagoon by Ryan Chandler my Rust buddy](https://github.com/ryangjchandler/lagoon)
 - Watch my [Create a JSON parser from scratch in C# video](https://www.youtube.com/watch?v=mAYgIPCc1vs&list=PL0DHMcUfPntZ9yLUJ7vi9H6jGz0dJyGJU)
 
-
+## Features
+- Nothing special just another programming language but we stole somethings from C#, JavaScript and Rust.
 
 ©️ propenster 2023
