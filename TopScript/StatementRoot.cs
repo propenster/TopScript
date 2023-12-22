@@ -269,6 +269,34 @@ namespace TopScript
         string Name { get; }
         List<Parameter> Fields { get; }
     }
+    public interface IForStatement : IStatement
+    {
+        StatementExpression Iterable { get; }
+        string Identifier { get; }
+        string? Index { get; }
+        List<Statement> Block { get; }
+    }
+    public class ForStatement : Statement, IForStatement
+    {
+        public StatementKind Kind => StatementKind.For;
+
+        public ForStatement(StatementExpression iterable, string value, string? index, List<Statement> block)
+        {
+            Iterable = iterable;
+            Value = value;
+            Index = index;
+            Block = block;
+        }
+
+        public StatementExpression Iterable { get; }
+        public string Value { get; }
+        public string Identifier { get; }
+
+        public string? Index { get; }
+
+        public List<Statement> Block { get; }
+        
+    }
     public class VarStatement : Statement, IVarStatement
     {
         public StatementKind Kind => StatementKind.Var;

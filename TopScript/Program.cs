@@ -4,6 +4,9 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        var isInt = int.TryParse("23.58", out int res);
+
+
         Console.WriteLine("TopScript interpreted programming language");
         Console.WriteLine();
         Console.WriteLine();
