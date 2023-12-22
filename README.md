@@ -16,6 +16,6 @@
 - Watch my [Create a JSON parser from scratch in C# video](https://www.youtube.com/watch?v=mAYgIPCc1vs&list=PL0DHMcUfPntZ9yLUJ7vi9H6jGz0dJyGJU)
 
 ## Features
-- Nothing special just another programming language but we stole somethings from C#, JavaScript and Rust.
+- Nothing special just another programming language but we stole a few things from C#, JavaScript and Rust.
 
 ©️ propenster 2023
