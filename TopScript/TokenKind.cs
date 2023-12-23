@@ -69,5 +69,6 @@ namespace TopScript
         Pow,
         EndLine,
         Struct,
+        Return,
     }
 }

@@ -18,20 +18,50 @@ namespace TopScript.StandardLib
         public RunValue println(Interpreter interpreter, List<RunValue> args)
         {
             var arg = args.FirstOrDefault();
-            Console.WriteLine(arg?.ToString());
+            Console.WriteLine(arg?.to_string());
 
             return new NullRunValue();
         }
         public RunValue print(Interpreter interpreter, List<RunValue> args)
         {
             var arg = args.FirstOrDefault();
-            Console.Write(arg?.ToString());
+            Console.Write(arg?.to_string());
 
             return new NullRunValue();
         }
+        public RunValue range(Interpreter interpreter, List<RunValue> args)
+        {
+            if (args.Count < 1 || args.Count > 2) throw new ArgumentException(string.Format("The {0} function expects {1} arguments, received {2}.", nameof(range), 2, args.Count));
+            var arg = args.FirstOrDefault();
+            var secondArg = args.LastOrDefault();
+            if (arg is NumberRunValue numberArg)
+            {
+                var intStartArg = 0;
+                var intEndArg = 0;
+                if (secondArg is NumberRunValue second && second != null)
+                {
+                    intStartArg = Convert.ToInt32(numberArg.Value);
+                    intEndArg = Convert.ToInt32(second.Value);
+                }
+                else
+                {
+                    intStartArg = 0;
+                    intEndArg = Convert.ToInt32(numberArg.Value);
+                }
+                var listInt = Enumerable.Range(intStartArg, intEndArg)
+                    .Select(x => new NumberRunValue(x) as RunValue)
+                    .ToList();
+
+                return new ListRunValue(listInt);
+            }
+
+            throw new NotImplementedException();
+
+
+        }
         public RunValue receive_correct_type(Interpreter interpreter, List<RunValue> args)
         {
-            if(!args.Any() || args.Count > 1)
+            if (!args.Any() || args.Count > 1)
             {
                 throw new ArgumentException(string.Format("Function {0} expects {1} arguments, received {2}.", "type", 1, args.Count));
             }
@@ -56,7 +86,7 @@ namespace TopScript.StandardLib
             if (libraryPath.StartsWith("."))
             {
                 var modulePath = interpreterDir.FullName;
-                if(libraryPath.EndsWith(".top"))
+                if (libraryPath.EndsWith(".top"))
                 {
                     modulePath = Path.Combine(modulePath, libraryPath);
                 }

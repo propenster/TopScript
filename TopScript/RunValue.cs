@@ -9,7 +9,6 @@ namespace TopScript
     public abstract class RunValue
     {
 
-
         public IEnumerable<RunValue> to_list()
         {
             if (this is ListRunValue listRunValue)
@@ -19,7 +18,7 @@ namespace TopScript
 
             throw new NotImplementedException();
         }
-
+        
         public double to_number()
         {
             if (this is NumberRunValue numberRunValue)
@@ -50,14 +49,16 @@ namespace TopScript
             else if (this is NumberRunValue numberRunValue)
             {
                 return numberRunValue.Value.ToString();
-            }else if(this is BooleanRunValue booleanRunValue)
+            }
+            else if (this is BooleanRunValue booleanRunValue)
             {
                 return booleanRunValue.ToString() ?? string.Empty;
-            }else if(this is NullRunValue)
+            }
+            else if (this is NullRunValue)
             {
                 return string.Empty;
             }
-            else 
+            else
             {
                 return this.ToString();
 
@@ -66,15 +67,15 @@ namespace TopScript
         }
         public bool to_bool()
         {
-            if(this is BooleanRunValue booleanRunValue && booleanRunValue.Value || this is FunctionRunValue)
+            if (this is BooleanRunValue booleanRunValue && booleanRunValue.Value || this is FunctionRunValue)
             {
                 return true;
             }
-            else if(this is StringRunValue s)
+            else if (this is StringRunValue s)
             {
                 return !string.IsNullOrWhiteSpace(s.Value);
             }
-            else if(this is  NumberRunValue numberRunValue)
+            else if (this is NumberRunValue numberRunValue)
             {
                 return numberRunValue.Value > 0.0;
             }

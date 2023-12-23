@@ -10,7 +10,8 @@ internal class Program
         Console.WriteLine("TopScript interpreted programming language");
         Console.WriteLine();
         Console.WriteLine();
-        var source = File.ReadAllText("examples/functions.top");
+        var sourcePath = "examples/functions.top";
+        var source = File.ReadAllText(sourcePath);
         var lexer = new Lexer(source);
 
         //while (true)
@@ -23,6 +24,9 @@ internal class Program
         var c = char.IsLetter('(');
         var parser = new Parser(lexer);
         var program = parser.Parse();
+
+        var interpreter = new Interpreter(program, sourcePath);
+        interpreter.Interprete();
 
         Console.WriteLine(program);
 

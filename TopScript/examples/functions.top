@@ -2,6 +2,6 @@
     println("Hello, " + name);
 }
 
-println(say_hello);
+println(sayHello);
 
-say_hello("Ryan");
+sayHello("Faith");

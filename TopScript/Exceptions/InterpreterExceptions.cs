@@ -80,7 +80,13 @@ namespace TopScript.Exceptions
         }
         public class InvalidAppendTargetException : Exception
         {
+            public InvalidAppendTargetException(string? message) : base(message)
+            {
+            }
 
+            public InvalidAppendTargetException(string? message, Exception? innerException) : base(message, innerException)
+            {
+            }
         }
         public class MissingArgumentException : Exception
         {
@@ -88,7 +94,13 @@ namespace TopScript.Exceptions
         }
         public class InvalidMethodAssignmentException : Exception
         {
+            public InvalidMethodAssignmentException(string? message) : base(message)
+            {
+            }
 
+            public InvalidMethodAssignmentException(string? message, Exception? innerException) : base(message, innerException)
+            {
+            }
         }
 
         [Serializable]

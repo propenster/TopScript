@@ -234,14 +234,11 @@ namespace TopScript
         }
         private bool IsReservedKeyword(string keyword, out TokenKind kind)
         {
-
-            //var kind = TokenKind.EOFToken;
             switch (keyword.ToLowerInvariant())
             {
                 case "var":
                     kind = TokenKind.Var;
                     break;
-
                 case "for":
                     kind = TokenKind.For;
                     break;
@@ -258,10 +255,10 @@ namespace TopScript
                 case "null":
                     kind = TokenKind.Null;
                     break;
-
                 case "function":
                     kind = TokenKind.Function;
                     break;
+                    
                 case "if":
                     kind = TokenKind.If;
                     break;
@@ -271,11 +268,12 @@ namespace TopScript
                 case "in":
                     kind = TokenKind.In;
                     break;
-
+                case "return":
+                    kind = TokenKind.Return;
+                    break;
                 default:
                     kind = TokenKind.EOFToken;
                     break;
-
             }
 
             if (kind != TokenKind.EOFToken)
@@ -312,11 +310,6 @@ namespace TopScript
             if (dots > 1) throw new FormatException("Invalid number format");
             var numberValue = _Source.Substring(currentPos, _Position - currentPos + 1);
             var cleaned = numberValue.Replace("_", "");
-            //if (dots == 0)
-            //{
-
-            //    return new Token(TokenKind.NumericLiteral, int.Parse(cleaned));
-            //}
             return new Token(TokenKind.NumericLiteral, double.Parse(cleaned));
         }
 

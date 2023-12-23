@@ -45,18 +45,18 @@ namespace TopScript
     }
     public class PrefixExpression : StatementExpression
     {
-        public PrefixExpression(Token token, StatementExpression expression)
+        public PrefixExpression(Op op, StatementExpression expression)
         {
-            Token = token;
+            Op = op;
             Expression = expression;
         }
 
-        public Token Token { get; }
+        public Op Op { get; }
         public StatementExpression Expression { get; }
 
         public override string ToString()
         {
-            return string.Format("{{ Token: {0}, Expression: {1} }}", Token, Expression);
+            return string.Format("{{ Op: {0}, Expression: {1} }}", Op, Expression);
         }
 
 
