@@ -23,8 +23,10 @@
 
 ## Examples
 
+All examples can be found in the [examples](https://github.com/propenster/TopScript/tree/master/TopScript/examples) directory on this repository.
+
 **1. Hello World**
-Check [print.top]() file in examples folder on this repo
+Check [print.top](https://github.com/propenster/TopScript/tree/master/TopScript/examples/print.top) file in examples folder on this repo
 ```
 print("Hello, World!");
 println("Hello, somebody from github");
@@ -32,7 +34,7 @@ println("Hello, somebody from github");
 ```
 
 **2. Variables and Var Declaration**
-Check [variables.top]() file in examples folder on this repo
+Check [variables.top](https://github.com/propenster/TopScript/tree/master/TopScript/examples/variables.top) file in examples folder on this repo
 ```
 var age = 28;
 var name = "Faith";
@@ -46,7 +48,7 @@ println("Amount is: " + amount);
 ```
 
 **3. Functions**
-Check [functions.top]() file in examples folder on this repo
+Check [functions.top](https://github.com/propenster/TopScript/tree/master/TopScript/examples/functions.top) file in examples folder on this repo
 ```
 function sayHello(name) {
     println("Hello, " + name);
@@ -62,11 +64,12 @@ greetings("John Doe");
 ```
 
 **4. Loop - For**
-
+Check [forloop.top](https://github.com/propenster/TopScript/tree/master/TopScript/examples/forloop.top) file in examples folder on this repo
 ```
 for(i in range(10)){
     println(i);
 }
+
 ```
 
 
