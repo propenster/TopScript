@@ -2,6 +2,9 @@
     println("Hello, " + name);
 }
 
-println(sayHello);
+function greetings(player){
+print("Welcome player: " + player + " to the game of life called chess");
+}
 
 sayHello("Faith");
+greetings("Constantinopole");
