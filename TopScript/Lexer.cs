@@ -332,7 +332,7 @@ namespace TopScript
         {
             var currentPos = _Position;
             //Next();
-            while (_CurrentChar != '\0' && _CurrentChar != ';' && char.IsLetter(_NextChar))
+            while (_CurrentChar != '\0' && _CurrentChar != ';' && (char.IsLetter(_NextChar) || _NextChar == '_'))
             {
                 Next();
             }

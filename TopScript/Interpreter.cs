@@ -27,8 +27,8 @@ namespace TopScript
             Environment = new InterpreterEnvironment();
             Globals = new Dictionary<string, RunValue>();
             RegisterGlobalFunctions();
-            Console.WriteLine("AST Depth: {0}", ast.Statements.Count);
-            Console.WriteLine("Starting interpretation of {0} ...", filePath);
+            //Console.WriteLine("AST Depth: {0}", ast.Statements.Count);
+            //Console.WriteLine("Starting interpretation of {0} ...", filePath);
         }
 
         public AstProgram Ast { get; }
@@ -159,6 +159,9 @@ namespace TopScript
             {
                 var instance = RunExpression(get?.Expression);
                 if (instance is null) throw new InterpreterExceptions.ExpressionEvaluationException(get.Expression.ToString());
+
+                var lit = get?.Field.ToString();
+                return GetProperty(instance, get?.Field, get?.Expression);
             }
             else if (expression is InfixExpression infix)
             {
@@ -203,6 +206,14 @@ namespace TopScript
                     var _sb = new StringBuilder();
                     _sb.Append(l6);
                     _sb.Append(r6);
+
+                    return new StringRunValue(_sb.ToString());
+                }
+                else if ((left, op, right) is (StringRunValue l6b, Op.Add, BooleanRunValue r6b))
+                {
+                    var _sb = new StringBuilder();
+                    _sb.Append(l6b);
+                    _sb.Append(r6b.Value);
 
                     return new StringRunValue(_sb.ToString());
                 }
@@ -558,7 +569,7 @@ namespace TopScript
             else if (value is StringRunValue strv)
             {
                 var _so = new StringObject();
-                var v = new NativeMethodRunValue(field, _so.Get(field), target);
+                var v = new NativeMethodRunValue(field, _so.Get(field.Trim()), target);
                 return v;
             }
             else if (value is NumberRunValue nrv)

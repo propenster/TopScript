@@ -73,5 +73,38 @@ for(i in range(10)){
 ```
 
 
+## Standard Library
+
+**Strings - StringObject**
+Check [strings.top](https://github.com/propenster/TopScript/tree/master/TopScript/examples/strings.top) file in examples folder on this repo
+```
+var name = "Tolu";
+
+println(name);
+
+var upperCaseText = "This should be in upperCase".to_upper();
+var nameToUpper = name.to_upper();
+
+
+println(upperCaseText);
+println(nameToUpper);
+
+var stringContainsWordHello = "World, Hello, Welcome to my wonderland".contains("Hello");
+println("String contains hello = " + stringContainsWordHello);
+
+
+var appendString = "Hello,".append(" World");
+println(appendString);
+
+var stringStartsWithHello = "World, Hello, Welcome to my wonderland".starts_with("Hello");
+println("Does string start with Hello ? " + stringStartsWithHello);
+
+var nullString = "";
+println("Is nullString null or whitespace ? " + nullString.is_null_or_whitespace());
+
+```
+
+
+
 
 ©️ propenster 2023

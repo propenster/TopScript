@@ -58,13 +58,10 @@ namespace TopScript
 
                     default:
                         var otherExpression = ParseExpression2(Precedence.Lowest);
-                        Console.WriteLine(otherExpression);
                         statement = new ExpressionStatement(otherExpression);
                         break;
                 }
             }
-
-            Console.WriteLine(_CurrentToken.ToString());
             return statement;
         }
 
@@ -223,7 +220,6 @@ namespace TopScript
             //parse out a var statement
             Next();
             var identifier = _CurrentToken;
-            //Console.WriteLine(identifier);
 
             if (identifier.kind != TokenKind.Identifier)
             {
@@ -237,7 +233,6 @@ namespace TopScript
 
             StatementExpression expression = ParseExpression(0);
             if (expression is null) throw new SyntaxException("Could not parse expression");
-            // Console.WriteLine(expression.ToString());
             var varStatement = new VarStatement((string)identifier.literal, expression);
             return varStatement;
         }
@@ -340,12 +335,10 @@ namespace TopScript
                 if (expP != null)
                 {
                     left = expP;
-                    //continue;
                 }
                 else if (expIn != null)
                 {
                     left = expIn;
-                    //continue;
                 }
                 else
                 {
@@ -368,7 +361,7 @@ namespace TopScript
             {
                 case TokenKind.Dot:
                     ExpectTokenAndRead(TokenKind.Dot);
-                    var field = ExpectIdentifierAndRead().ToString();
+                    var field = ExpectIdentifierAndRead()?.literal.ToString();
                     return new GetExpression(left, field);
 
                 case TokenKind.OpenSquareBracket:

@@ -21,7 +21,7 @@ namespace TopScript.StandardLib
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
             NativeMethodCallback callback = null;
-            switch(name.ToLowerInvariant().Trim())
+            switch(name.ToLower().Trim())
             {
                 case "contains": callback = string_contains; break;
                 case "starts_with": callback = string_starts_with; break;
