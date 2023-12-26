@@ -4,10 +4,13 @@ println(name);
 
 var upperCaseText = "This should be in upperCase".to_upper();
 var nameToUpper = name.to_upper();
+var nameToLower = nameToUpper.to_lower();
 
 
 println(upperCaseText);
 println(nameToUpper);
+println(nameToLower);
+
 
 var stringContainsWordHello = "World, Hello, Welcome to my wonderland".contains("Hello");
 println("String contains hello = " + stringContainsWordHello);
