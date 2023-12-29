@@ -4,8 +4,8 @@
 
 **This is to confirm the fact that there is now absolutely nothing (sounding overly confident) that I have not built using C# (the most elegant high-level language there is)** - Ratio this 🪨 😲 😆 💩
 
-- Lexing for dummies
-- Parsing for dummies
+- Lexing for normal people
+- Parsing for normal people
 - AST
 - Runtime from scratch
 

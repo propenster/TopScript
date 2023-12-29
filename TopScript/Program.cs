@@ -6,8 +6,8 @@ internal class Program
     {
         var isInt = int.TryParse("23.58", out int res);
 
-        //variables, functions, strings, 
-        var sourcePath = "examples/strings.top";
+        //variables, functions, strings, lists
+        var sourcePath = "examples/lists.top";
         var source = File.ReadAllText(sourcePath);
 
         var lexer = new Lexer(source);

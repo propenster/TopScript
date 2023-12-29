@@ -58,6 +58,10 @@ namespace TopScript
             {
                 return string.Empty;
             }
+            else if(this is ListRunValue lrv)
+            {
+                return lrv.Values.ToDelimitedString();
+            }
             else
             {
                 return this.ToString();

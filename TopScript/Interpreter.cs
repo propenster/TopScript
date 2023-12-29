@@ -163,6 +163,32 @@ namespace TopScript
                 var lit = get?.Field.ToString();
                 return GetProperty(instance, get?.Field, get?.Expression);
             }
+            else if (expression is AssignmentExpression assign)
+            {
+                var value = RunExpression(assign?.Right);
+
+                if (assign.Left is ListIndexExpression lie)
+                {
+                    var instance = RunExpression(lie.Expression);
+
+                    AssignValueToList(this, instance, lie?.Index, value);
+                }
+                else if (assign.Left is GetExpression ge)
+                {
+                    var instance = RunExpression(ge.Expression);
+                    AssignValueToInstance(instance, ge.Field, value);
+                }
+                else
+                {
+                    if (assign.Left is IdentifierExpression ide)
+                    {
+                        Environment.Set(ide.Identifier, value);
+                    }
+                    else { throw new NotImplementedException(); }
+
+                }
+                return value;
+            }
             else if (expression is InfixExpression infix)
             {
                 var left = RunExpression(infix?.Left);
@@ -374,31 +400,7 @@ namespace TopScript
                 }
                 else throw new NotImplementedException();
             }
-            else if (expression is AssignmentExpression assign)
-            {
-                var value = RunExpression(assign?.Right);
-
-                if (assign.Left is ListIndexExpression lie)
-                {
-                    var instance = RunExpression(lie.Expression);
-
-                    AssignValueToList(this, instance, lie?.Index, value);
-                }
-                else if (assign.Left is GetExpression ge)
-                {
-                    var instance = RunExpression(ge.Expression);
-                    AssignValueToInstance(instance, ge.Field, value);
-                }
-                else
-                {
-                    if (assign.Left is IdentifierExpression ide)
-                    {
-                        Environment.Set(ide.Identifier, value);
-                    }
-                    throw new NotImplementedException();
-                }
-                return value;
-            }
+           
             throw new NotImplementedException();
         }
         private void AssignValueToInstance(RunValue instance, string field, RunValue value)

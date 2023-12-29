@@ -11,6 +11,9 @@
     <None Update="examples\functions.top">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="examples\lists.top">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="examples\print.top">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
